@@ -27,16 +27,25 @@ _start:	#Loads corresponding matricies into correct positions
 	movl $multiplier, %esi	#copy multiplier matrix into register
 	movl $multiplicand, %edi	#copy multiplicand matrix into register
 	
+	movl $1, %ecx	#keeps track of current element stored by column-by-column
+			#Note this is not a symetric matrix
 
-	movl $1, cur_col	#sets the current column
-	movl $1, cur_row	#sets teh current row
+	jmp calc_elm	#calculates current element
+
 
 #find the element we wish to calculate
-find_elm:
-	add
+calc_elm:
+	
+	#jumps to retrieve row of multiplier matrix determined by ecx
+	#retrieve columns of multiplicand matrix
+	#calculate the product of matrix
+	#calculates the element
+	#inserts product into product matrix
+	#increase count
+	#jump to the next element within the matrix
+	
 
-#calculate the element and store to memory
-#jump back to next calculation of element	
+
 
 done:	
 
