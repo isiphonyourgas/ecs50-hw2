@@ -1,8 +1,8 @@
-#This is just a test to load the matrix in
+
 
 .data  #start with the data section
 
-multiplier:
+multiplier:	#multiplier matrix
 	.long	1
 	.long	2
 	.long	3
@@ -10,42 +10,63 @@ multiplier:
 	.long	5
 	.long	6
 
-multiplicand:
+multiplicand:	#multiplicand matrix
 	.long	1
 	.long	2
 	.long	3
 	.long	4
 	.long	5
 	.long	6
+
+row:	#current cow
+	.long 1
+
+col:	#current column
+	.long 1
 
 .text	#start of text section
 
 .globl _start
 _start:	#Loads corresponding matricies into correct positions
 
-	movl $3, %edx	#copy matrix size into register
-	movl $multiplier, %esi	#copy multiplier matrix into register
-	movl $multiplicand, %edi	#copy multiplicand matrix into register
-	
-	movl $1, %ecx	#keeps track of current element stored by column-by-column
-			#Note this is not a symetric matrix
-
-	jmp calc_elm	#calculates current element
+	call init #initializes registers	
+	jmp mulsym	#calculates current element
 
 
 #find the element we wish to calculate
-calc_elm:
+mulsym:
 	
-	#jumps to retrieve row of multiplier matrix determined by ecx
+row_op:
+	
+	addl $1, row #after row operations finish, increase row by one
+	coml row, %edx
+	jl inc_col #if rows are larger than dimensions, move to next col
+	jge row_op	#else repeat the row ops
+
+
 	#retrieve columns of multiplicand matrix
 	#calculate the product of matrix
 	#calculates the element
 	#inserts product into product matrix
 	#increase count
-	#jump to the next element within the matrix
+	
+
 	
 
 
+init:
+	movl $3, %edx	#copy matrix size into register
+	movl $multiplier, %esi	#copy multiplier matrix into register
+	movl $multiplicand, %edi	#copy multiplicand matrix into register
+	ret
+
+inc_col:
+	movl $1, row #reset rows to 1
+	addl $1, col #add 1 to columns
+	coml col, %edx
+	jl done	#if the columns is larger than the dimensions, the program is done
+	jge row_ops	#if colums is equal or less than the dimensions, repeat the row ops
+	
 
 done:	
 
