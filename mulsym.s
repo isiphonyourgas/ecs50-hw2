@@ -154,7 +154,7 @@ set_r:
 	subl %edx, %edi
 	addl $4, %esi
 	addl $4, %edi
-	add $1, %edx
+	addl $1, %edx
 	jmp part4
 	
 set_multiplicand:
