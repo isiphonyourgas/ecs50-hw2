@@ -15,16 +15,16 @@ multiplier:	#multiplier matrix
 	.long	10
 
 multiplicand:	#multiplicand matrix
-	.long	1
-	.long	2
-	.long	3
-	.long	4
-	.long	5
-	.long	6
-	.long	7
-	.long	8
 	.long	9
-	.long	10
+	.long	8
+	.long	5
+	.long	7
+	.long	13
+	.long	88
+	.long	64
+	.long	78
+	.long	6
+	.long	33
 
 product:
 	.long 	0
@@ -36,6 +36,13 @@ product:
 	.long 	0
 	.long 	0
 	.long 	0
+	.long	0
+	.long	0
+	.long	0
+	.long	0
+	.long	0
+	.long	0
+	.long	0
 
 
 row:	#current row
@@ -93,6 +100,8 @@ part3:
 #	subl $1, %eax
 	cmpl %eax, %edx	
 	jg set_multiplier
+	addl $1, %edx
+	call reset_multiplier
 	
 part4:
 	call set_multiplicand
@@ -131,10 +140,30 @@ set_multiplier:
 	subl %edx, %esi
 	cmpl row, %edx
 	jnz set_multiplier
+#	cmpl $1, %edx
+#	jnz set_multiplier2
+revert_multiplier:
 	movl size, %edx
 #	addl $4, %esi
 	jmp part4
 
+set_multiplier2:
+	subl $1, %edx
+	subl $4, %esi
+	cmpl $1, %edx
+	jnz set_multiplier2
+	jmp revert_multiplier
+
+reset_multiplier:
+	subl $1, %edx
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	cmpl $1, %edx
+	jnz reset_multiplier
+	movl size, %edx
+	ret
 set_r:
 	subl $1, %edx
 	subl %edx, %esi
@@ -156,24 +185,32 @@ set_multiplicand:
 	subl %edx, %edi
 	subl %edx, %edi
 	subl %edx, %edi
-	cmpl $1, %edx
+	cmpl col, %edx
 	jnz set_multiplicand
+	cmpl $1, %edx
+	jnz set_multiplicand2
+revert_multiplicand:
 	movl size, %edx
 	subl $4, %edi
 	ret
+
+set_multiplicand2:
+	subl $1, %edx
+	subl $4, %edi
+	cmpl $1, %edx
+	jnz set_multiplicand2
+	jmp revert_multiplicand
+
 	
 	
 
 inc_col:
 	movl $1, row #reset rows to 1
 inc_col2:
-	addl $1, %eax
-	addl %eax, %edi
-	addl %eax, %edi
-	addl %eax, %edi
-	addl %eax, %edi
-	cmpl col, %eax
-	jnz inc_col2
+	addl col, %edi
+	addl col, %edi
+	addl col, %edi
+	addl col, %edi
 	addl $1, col #add 1 to columns
 	cmpl col, %edx
 	jl done	#if the columns is larger than the dimensions, the program is done
