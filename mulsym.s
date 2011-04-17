@@ -82,12 +82,13 @@ part3:
 	addl $4, %ebp
 
 	movl row, %eax#preps eax as row -1 for call set_next_row
-	addl $1, %eax
-	cmpl %eax, %edx	
-	jg set_next_row
-	jmp set_r
+	subl $1, %eax
+#	cmpl %eax, %edx	
+	jmp set_multiplier
+#	jmp set_r
 	
 part4:
+	call set_multiplicand
 	addl $1, row #after row operations finish, increase row by one
 	cmpl row, %edx
 	jl inc_col #if rows are larger than dimensions, move to next col
@@ -114,21 +115,16 @@ init:
 	movl %edx, size
 	ret
 
-set_next_row:
-	addl $-1, %edx
+set_multiplier:
+	subl $1, %edx
 	subl %edx, %esi
 	subl %edx, %esi
 	subl %edx, %esi
 	subl %edx, %esi
-	subl %edx, %edi
-	subl %edx, %edi
-	subl %edx, %edi
-	subl %edx, %edi
-	cmpl %eax, %edx
-	jnz set_next_row
+	cmpl row, %edx
+	jnz set_multiplier
 	movl size, %edx
-	addl $4, %esi
-	subl $4, %edi
+#	addl $4, %esi
 	jmp part4
 
 set_r:
@@ -146,6 +142,17 @@ set_r:
 	add $1, %edx
 	jmp part4
 	
+set_multiplicand:
+	subl $1, %edx
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	cmpl $1, %edx
+	jnz set_multiplicand
+	movl size, %edx
+	subl $4, %edi
+	ret
 	
 	
 
