@@ -66,33 +66,42 @@ _start:	#Loads corresponding matricies into correct positions
 #find the element we wish to calculate
 mulsym:
 #	movl $0, %ecx
+	movl %edx, size
 	addl $-4, %esi
 	addl $-4, %edi
+
+#Begins the operation for the current element
 row_op:
 	
 	
-	movl $0, %ebx	
-	movl $0, %ecx
+	movl $0, %ebx	#set running total to 0
+	movl $0, %ecx	#set current sub-element to 0
+
+#first call starts with the 1st sub-element
+#ith call is the ith sub-element
+#computes the 2 multiplied numbers together and adds them up (sub-elements)
+#EBX stores teh running total
+#RCX stores the current sub-element being calculated
 multi:
-	addl $1, %ecx	
+	addl $1, %ecx	#increments a count for current part of element for multiplication and summation
 	cmpl %ecx, row	#if the current row is greater than the  count
-	jl add1a	#jump to add the corresponding slots
-	addl $4, %esi
+	jl add1a	#navigate to the next sub-element in the multiplier matrix needed
+	addl $4, %esi	#sub-element is just 1 more away in position
 part2:	
 	cmpl %ecx, col	#same as above but for column
-	jl add1b
-	addl $4, %edi
+	jl add1b	#navigates to the next sub-element in multiplicand matrix
+	addl $4, %edi	#sub-element is just 1 position away
 part3:	
-	movl (%esi), %eax
-	imull (%edi)
-	movl size, %edx
-	addl %eax, %ebx
-#check then jump to multi
+	movl (%esi), %eax	#moves multiplier sub-element into esi
+	imull (%edi)		#multiplys multiplicand element with multiplier sub-element
+	movl size, %edx		#ensures size is in edx
+	addl %eax, %ebx		#adds the current sub-element to the runnign total of the element
 
-	
+#checks if finished with all sub-elements
 	cmpl %ecx, %edx
-	jg multi
+	jg multi	#if not, moves to next sub elements
 
+#if the current element is completed, puts element into product matrix
 	movl %ebx, (%ebp)
 	addl $4, %ebp
 
