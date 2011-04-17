@@ -103,30 +103,22 @@ part3:
 
 #if the current element is completed, puts element into product matrix
 	movl %ebx, (%ebp)
-	addl $4, %ebp
+	addl $4, %ebp	#increments for next product matrix
 
-	movl row, %eax#preps eax as row -1 for call set_next_row
-#	subl $1, %eax
-	cmpl %eax, %edx	
-	jg set_multiplier
-	addl $1, %edx
-	call reset_multiplier
+	cmpl row, %edx		#compares rows to the dimentions
+	jg set_multiplier	#resets the multiplier for next element
+	addl $1, %edx		#sets up %edx for next function call
+	call reset_multiplier	#sets the multiplier for next column
 	
 part4:
-	call set_multiplicand
-	addl $1, row #after row operations finish, increase row by one
-	cmpl row, %edx
-	mov $0, %eax
-	jl inc_col #if rows are larger than dimensions, move to next col
+	call set_multiplicand	#resets the multiplicand for next element
+	addl $1, row 		#after row operations finish, increase row by one
+	cmpl row, %edx		#compares rows to matrix size to determine is should increase columns
+	mov $0, %eax		#empty eax
+	jl inc_col		#increments columns and sets multiplicand for next column ops
 	jge row_op	#else repeat the row ops
 
 
-	#retrieve columns of multiplicand matrix
-	#calculate the product of matrix
-	#calculates the element
-	#inserts product into product matrix
-	#increase count
-	
 
 	
 
@@ -141,27 +133,19 @@ init:
 	movl %edx, size
 	ret
 
+#this is kinda bad i forgot how this function works but it works
 set_multiplier:
 	subl $1, %edx
+	subl %edx, %esi	#increments edx slots
 	subl %edx, %esi
 	subl %edx, %esi
 	subl %edx, %esi
-	subl %edx, %esi
-	cmpl row, %edx
+	cmpl row, %edx	
 	jnz set_multiplier
-#	cmpl $1, %edx
-#	jnz set_multiplier2
 revert_multiplier:
 	movl size, %edx
-#	addl $4, %esi
 	jmp part4
 
-set_multiplier2:
-	subl $1, %edx
-	subl $4, %esi
-	cmpl $1, %edx
-	jnz set_multiplier2
-	jmp revert_multiplier
 
 reset_multiplier:
 	subl $1, %edx
