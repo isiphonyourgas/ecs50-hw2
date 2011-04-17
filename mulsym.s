@@ -18,6 +18,18 @@ multiplicand:	#multiplicand matrix
 	.long	5
 	.long	6
 
+product:
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+	.long 	0
+
+
 row:	#current row
 	.long 1	
 
@@ -35,9 +47,32 @@ _start:	#Loads corresponding matricies into correct positions
 
 #find the element we wish to calculate
 mulsym:
-	
+	movl $0, %ecx	
 row_op:
-	
+	addl $-4, %esi
+	addl $-4, %edi
+	movl $0, %ebx	
+multi:
+	addl $1, %ecx	
+	cmpl %ecx, row	#if the current row is greater than the  count
+	jge add1a	#jump to add the corresponding slots
+	addl $4, %esi
+part2:	
+	cmpl %ecx, col	#same as above but for column
+	jge add1b
+	addl $4, %edi
+part3:	
+	movl (%esi), %eax
+	imull (%edi)
+	addl %eax, %ebx
+#check then jump to multi
+	cmpl %ecx, %edx
+	jg multi
+
+	movl %ebx, (%ebp)
+	addl $4, %ebp
+
+
 	addl $1, row #after row operations finish, increase row by one
 	cmpl row, %edx
 	jl inc_col #if rows are larger than dimensions, move to next col
@@ -58,6 +93,7 @@ init:
 	movl $3, %edx	#copy matrix size into register
 	movl $multiplier, %esi	#copy multiplier matrix into register
 	movl $multiplicand, %edi	#copy multiplicand matrix into register
+	movl $product, %ebp
 	movl $1, row
 	movl $1, col
 	ret
@@ -69,6 +105,22 @@ inc_col:
 	jl done	#if the columns is larger than the dimensions, the program is done
 	jge row_op	#if colums is equal or less than the dimensions, repeat the row ops
 	
+add1a:
+	
+	addl %ecx, %esi
+	addl %ecx, %esi
+	addl %ecx, %esi
+	addl %ecx, %esi
+	
+	jmp part2
+
+add1b:
+	
+	addl %ecx, %edi
+	addl %ecx, %edi
+	addl %ecx, %edi
+	addl %ecx, %edi
+	jmp part3
 
 done:	
 
