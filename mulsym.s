@@ -50,10 +50,12 @@ _start:	#Loads corresponding matricies into correct positions
 
 #find the element we wish to calculate
 mulsym:
-#	movl $0, %ecx	
-row_op:
+#	movl $0, %ecx
 	addl $-4, %esi
 	addl $-4, %edi
+row_op:
+	
+	
 	movl $0, %ebx	
 	movl $0, %ecx
 multi:
@@ -79,7 +81,13 @@ part3:
 	movl %ebx, (%ebp)
 	addl $4, %ebp
 
-
+	movl row, %eax#preps eax as row -1 for call set_next_row
+	addl $1, %eax
+	cmpl %eax, %edx	
+	jg set_next_row
+	jmp set_r
+	
+part4:
 	addl $1, row #after row operations finish, increase row by one
 	cmpl row, %edx
 	jl inc_col #if rows are larger than dimensions, move to next col
@@ -105,6 +113,41 @@ init:
 	movl $1, col
 	movl %edx, size
 	ret
+
+set_next_row:
+	addl $-1, %edx
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	cmpl %eax, %edx
+	jnz set_next_row
+	movl size, %edx
+	addl $4, %esi
+	subl $4, %edi
+	jmp part4
+
+set_r:
+	subl $1, %edx
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %esi
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	subl %edx, %edi
+	addl $4, %esi
+	addl $4, %edi
+	add $1, %edx
+	jmp part4
+	
+	
+	
 
 inc_col:
 	movl $1, row #reset rows to 1
