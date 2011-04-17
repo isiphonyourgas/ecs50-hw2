@@ -31,10 +31,13 @@ product:
 
 
 row:	#current row
-	.long 1	
+	.long	1	
 
 col:	#current column
-	.long 1
+	.long	1
+
+size:
+	.long	3
 
 .text	#start of text section
 
@@ -47,25 +50,29 @@ _start:	#Loads corresponding matricies into correct positions
 
 #find the element we wish to calculate
 mulsym:
-	movl $0, %ecx	
+#	movl $0, %ecx	
 row_op:
 	addl $-4, %esi
 	addl $-4, %edi
 	movl $0, %ebx	
+	movl $0, %ecx
 multi:
 	addl $1, %ecx	
 	cmpl %ecx, row	#if the current row is greater than the  count
-	jge add1a	#jump to add the corresponding slots
+	jl add1a	#jump to add the corresponding slots
 	addl $4, %esi
 part2:	
 	cmpl %ecx, col	#same as above but for column
-	jge add1b
+	jl add1b
 	addl $4, %edi
 part3:	
 	movl (%esi), %eax
 	imull (%edi)
+	movl size, %edx
 	addl %eax, %ebx
 #check then jump to multi
+
+	
 	cmpl %ecx, %edx
 	jg multi
 
@@ -96,6 +103,7 @@ init:
 	movl $product, %ebp
 	movl $1, row
 	movl $1, col
+	movl %edx, size
 	ret
 
 inc_col:
@@ -106,20 +114,22 @@ inc_col:
 	jge row_op	#if colums is equal or less than the dimensions, repeat the row ops
 	
 add1a:
-	
+	addl $-1, %ecx
 	addl %ecx, %esi
 	addl %ecx, %esi
 	addl %ecx, %esi
 	addl %ecx, %esi
+	addl $1, %ecx
 	
 	jmp part2
 
 add1b:
-	
+	addl $-1, %ecx
 	addl %ecx, %edi
 	addl %ecx, %edi
 	addl %ecx, %edi
 	addl %ecx, %edi
+	addl $1, %ecx
 	jmp part3
 
 done:	
