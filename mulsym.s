@@ -27,23 +27,9 @@ multiplicand:	#multiplicand matrix
 	.long	33
 
 product:
+	.rept 16
 	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long 	0
-	.long	0
-	.long	0
-	.long	0
-	.long	0
-	.long	0
-	.long	0
-	.long	0
-
+	.endr
 
 row:	#current row
 	.long	1	
@@ -130,7 +116,6 @@ init:
 	movl $product, %ebp
 	movl $1, row
 	movl $1, col
-	movl %edx, size
 	ret
 
 #this is kinda bad i forgot how this function works but it works
@@ -228,5 +213,6 @@ add1b:
 	addl $1, %ecx
 	jmp part3
 
-done:	
+done:
+	movl %eax, %eax #dummy code for debugging
 
