@@ -9,6 +9,10 @@ multiplier:	#multiplier matrix
 	.long	4
 	.long	5
 	.long	6
+	.long	7
+	.long	8
+	.long	9
+	.long	10
 
 multiplicand:	#multiplicand matrix
 	.long	1
@@ -17,6 +21,10 @@ multiplicand:	#multiplicand matrix
 	.long	4
 	.long	5
 	.long	6
+	.long	7
+	.long	8
+	.long	9
+	.long	10
 
 product:
 	.long 	0
@@ -82,15 +90,15 @@ part3:
 	addl $4, %ebp
 
 	movl row, %eax#preps eax as row -1 for call set_next_row
-	subl $1, %eax
-#	cmpl %eax, %edx	
-	jmp set_multiplier
-#	jmp set_r
+#	subl $1, %eax
+	cmpl %eax, %edx	
+	jg set_multiplier
 	
 part4:
 	call set_multiplicand
 	addl $1, row #after row operations finish, increase row by one
 	cmpl row, %edx
+	mov $0, %eax
 	jl inc_col #if rows are larger than dimensions, move to next col
 	jge row_op	#else repeat the row ops
 
@@ -106,7 +114,7 @@ part4:
 
 
 init:
-	movl $3, %edx	#copy matrix size into register
+	movl $4, %edx	#copy matrix size into register
 	movl $multiplier, %esi	#copy multiplier matrix into register
 	movl $multiplicand, %edi	#copy multiplicand matrix into register
 	movl $product, %ebp
@@ -158,6 +166,14 @@ set_multiplicand:
 
 inc_col:
 	movl $1, row #reset rows to 1
+inc_col2:
+	addl $1, %eax
+	addl %eax, %edi
+	addl %eax, %edi
+	addl %eax, %edi
+	addl %eax, %edi
+	cmpl col, %eax
+	jnz inc_col2
 	addl $1, col #add 1 to columns
 	cmpl col, %edx
 	jl done	#if the columns is larger than the dimensions, the program is done
