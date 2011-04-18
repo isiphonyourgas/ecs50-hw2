@@ -97,7 +97,10 @@ part3:
 	call reset_multiplier	#sets the multiplier for next column
 	
 part4:
-	call set_multiplicand	#resets the multiplicand for next element
+	cmpl col, %edx		#if the colums are equal to the row, don't call set_multiplicand
+	jnz set_multiplicand	#resets the multiplicand for next element
+	jz set_multiplicand2
+part5:	
 	addl $1, row 		#after row operations finish, increase row by one
 	cmpl row, %edx		#compares rows to matrix size to determine is should increase columns
 	mov $0, %eax		#empty eax
@@ -170,7 +173,7 @@ set_multiplicand:
 revert_multiplicand:
 	movl size, %edx
 	subl $4, %edi
-	ret
+	jmp part5
 
 set_multiplicand2:
 	subl $1, %edx
