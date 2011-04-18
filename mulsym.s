@@ -1,4 +1,4 @@
-
+#Jason Wong, Aaron Okano, Meenal Tambe, Gowthom (entering it yourself, i can't spell it)
 
 .data  #start with the data section
 
@@ -121,7 +121,7 @@ init:
 	movl $1, col
 	ret
 
-#this is kinda bad i forgot how this function works but it works
+#subtracts recursively size -1 to obtain previous sub-element
 set_multiplier:
 	subl $1, %edx
 	subl %edx, %esi	#increments edx slots
@@ -129,12 +129,12 @@ set_multiplier:
 	subl %edx, %esi
 	subl %edx, %esi
 	cmpl row, %edx	
-	jnz set_multiplier
+	jnz set_multiplier	#alg must stop at diagonals and subtract 1 sub-element at this point
 revert_multiplier:
 	movl size, %edx
 	jmp part4
 
-
+#subtracts 1 to obtain previous sub-element
 reset_multiplier:
 	subl $1, %edx
 	subl %edx, %esi
@@ -145,21 +145,8 @@ reset_multiplier:
 	jnz reset_multiplier
 	movl size, %edx
 	ret
-set_r:
-	subl $1, %edx
-	subl %edx, %esi
-	subl %edx, %esi
-	subl %edx, %esi
-	subl %edx, %esi
-	subl %edx, %edi
-	subl %edx, %edi
-	subl %edx, %edi
-	subl %edx, %edi
-	addl $4, %esi
-	addl $4, %edi
-	addl $1, %edx
-	jmp part4
 	
+#sets the multiplicand for next row operation at size -1 recursively
 set_multiplicand:
 	subl $1, %edx
 	subl %edx, %edi
@@ -175,6 +162,7 @@ revert_multiplicand:
 	subl $4, %edi
 	jmp part5
 
+#sets multiplicand for next row op but moves 1 slot back
 set_multiplicand2:
 	subl $1, %edx
 	subl $4, %edi
@@ -184,7 +172,7 @@ set_multiplicand2:
 
 	
 	
-
+#increments the columns
 inc_col:
 	movl $1, row #reset rows to 1
 inc_col2:
@@ -192,11 +180,12 @@ inc_col2:
 	addl col, %edi
 	addl col, %edi
 	addl col, %edi
-	addl $1, col #add 1 to columns
+	addl $1, col 	#add 1 to columns
 	cmpl col, %edx
-	jl done	#if the columns is larger than the dimensions, the program is done
+	jl done		#if the columns is larger than the dimensions, the program is done
 	jge row_op	#if colums is equal or less than the dimensions, repeat the row ops
 	
+#obtains next subelement in multiplier matrix
 add1a:
 	addl $-1, %ecx
 	addl %ecx, %esi
@@ -204,9 +193,9 @@ add1a:
 	addl %ecx, %esi
 	addl %ecx, %esi
 	addl $1, %ecx
-	
 	jmp part2
 
+#obtains next sub-element in multiplicand matrix
 add1b:
 	addl $-1, %ecx
 	addl %ecx, %edi
