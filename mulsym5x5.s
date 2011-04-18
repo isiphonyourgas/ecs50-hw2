@@ -1,55 +1,71 @@
-#Jason Wong, Aaron Okano, Meenal Tambe, Gowthom (entering it yourself, i can't spell it)
+.data
 
-.data  #start with the data section
+multiplier:
+	.long 19
+	.long 9
+	.long 5
+	.long 4
+	.long 2
+	.long 8
+  .long 13
+  .long 19
+  .long 8
+  .long 22
+  .long 7
+  .long 3
+  .long 1
+  .long 11
+  .long 6
 
-multiplier:	#multiplier matrix
-	.long	1
-	.long	2
-	.long	3
-	.long	4
-	.long	5
-	.long	6
-	.long	7
-	.long	8
-	.long	9
-	.long	10
-
-multiplicand:	#multiplicand matrix
-	.long	9
-	.long	8
-	.long	5
-	.long	7
-	.long	13
-	.long	88
-	.long	64
-	.long	78
-	.long	6
-	.long	33
+multiplicand:
+	.long 4
+	.long 13
+	.long 15
+	.long 35
+	.long 5
+	.long 20
+  .long 7
+  .long 12
+  .long 45
+  .long 32
+  .long 7
+  .long 0
+  .long 8
+  .long 26
+  .long 12
 
 product:
-	.rept 16
-	.long 	0
+	.rept 25
+	.long 0
 	.endr
 
 row:	#current row
-	.long	1	
+	.long 1
 
 col:	#current column
-	.long	1
+	.long 1
 
 size:
-	.long	0
+	.long 0
 
-.text	#start of text section
+.text
 
 .globl _start
-_start:	#Loads corresponding matricies into correct positions
+_start:
+	call init
+	jmp mulsym
 
-	call init #initializes registers	
-	jmp mulsym	#calculates current element
+
+init:
+	movl $5, %edx	#copy matrix size into register
+	movl $multiplier, %esi	#copy multiplier matrix into register
+	movl $multiplicand, %edi	#copy multiplicand matrix into register
+	movl $product, %ebp
+	movl $1, row
+	movl $1, col
+	ret
 
 
-#find the element we wish to calculate
 mulsym:
 #	movl $0, %ecx
 	movl %edx, size
@@ -107,19 +123,6 @@ part5:
 	jl inc_col		#increments columns and sets multiplicand for next column ops
 	jge row_op	#else repeat the row ops
 
-
-
-	
-
-
-init:
-	movl $4, %edx	#copy matrix size into register
-	movl $multiplier, %esi	#copy multiplier matrix into register
-	movl $multiplicand, %edi	#copy multiplicand matrix into register
-	movl $product, %ebp
-	movl $1, row
-	movl $1, col
-	ret
 
 #subtracts recursively size -1 to obtain previous sub-element
 set_multiplier:
