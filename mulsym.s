@@ -99,7 +99,7 @@ part3:
 part4:
 	cmpl col, %edx		#if the colums are equal to the row, don't call set_multiplicand
 	jnz set_multiplicand	#resets the multiplicand for next element
-	jz set_multiplicand2
+	jz set_multiplicand2	#if last column, skips needless previous step
 part5:	
 	addl $1, row 		#after row operations finish, increase row by one
 	cmpl row, %edx		#compares rows to matrix size to determine is should increase columns
