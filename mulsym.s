@@ -1,4 +1,4 @@
-#Jason Wong, Aaron Okano, Meenal Tambe, Gowthom (entering it yourself, i can't spell it)
+#Jason Wong, Aaron Okano, Meenal Tambe, Gowtham Vijayaragavan
 
 .data  #start with the data section
 
@@ -46,8 +46,17 @@ size:
 _start:	#Loads corresponding matricies into correct positions
 
 	call init #initializes registers	
-	jmp mulsym	#calculates current element
+	call mulsym	#calculates current element
+	jmp done
 
+init:
+	movl $4, %edx	#copy matrix size into register
+	movl $multiplier, %esi	#copy multiplier matrix into register
+	movl $multiplicand, %edi	#copy multiplicand matrix into register
+	movl $product, %ebp
+	movl $1, row
+	movl $1, col
+	ret
 
 #find the element we wish to calculate
 mulsym:
@@ -107,19 +116,6 @@ part5:
 	jl inc_col		#increments columns and sets multiplicand for next column ops
 	jge row_op	#else repeat the row ops
 
-
-
-	
-
-
-init:
-	movl $4, %edx	#copy matrix size into register
-	movl $multiplier, %esi	#copy multiplier matrix into register
-	movl $multiplicand, %edi	#copy multiplicand matrix into register
-	movl $product, %ebp
-	movl $1, row
-	movl $1, col
-	ret
 
 #subtracts recursively size -1 to obtain previous sub-element
 set_multiplier:
@@ -182,7 +178,7 @@ inc_col2:
 	addl col, %edi
 	addl $1, col 	#add 1 to columns
 	cmpl col, %edx
-	jl done		#if the columns is larger than the dimensions, the program is done
+	jl end_mulsym		#if the columns is larger than the dimensions, the program is done
 	jge row_op	#if colums is equal or less than the dimensions, repeat the row ops
 	
 #obtains next subelement in multiplier matrix
@@ -204,6 +200,9 @@ add1b:
 	addl %ecx, %edi
 	addl $1, %ecx
 	jmp part3
+
+end_mulsym:
+	ret
 
 done:
 	movl %eax, %eax #dummy code for debugging
