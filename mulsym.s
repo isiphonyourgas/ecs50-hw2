@@ -60,15 +60,12 @@ init:
 
 #find the element we wish to calculate
 mulsym:
-#	movl $0, %ecx
 	movl %edx, size
 	addl $-4, %esi
 	addl $-4, %edi
 
 #Begins the operation for the current element
 row_op:
-	
-	
 	movl $0, %ebx	#set running total to 0
 	movl $0, %ecx	#set current sub-element to 0
 
@@ -76,7 +73,7 @@ row_op:
 #ith call is the ith sub-element
 #computes the 2 multiplied numbers together and adds them up (sub-elements)
 #EBX stores teh running total
-#RCX stores the current sub-element being calculated
+#ECX stores the current sub-element being calculated
 multi:
 	addl $1, %ecx	#increments a count for current part of element for multiplication and summation
 	cmpl %ecx, row	#if the current row is greater than the  count
@@ -165,8 +162,6 @@ set_multiplicand2:
 	cmpl $1, %edx
 	jnz set_multiplicand2
 	jmp revert_multiplicand
-
-	
 	
 #increments the columns
 inc_col:
